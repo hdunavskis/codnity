@@ -1,10 +1,6 @@
-import logging
 import argparse
 import requests
-from . import codnity_logger
-
-logger = logging.getLogger(__name__)
-
+from bs4 import BeautifulSoup
 
 class Scraper:
     """Gets data from hacker news website"""
@@ -27,11 +23,26 @@ class Scraper:
             raise ValueError("Url is not provided!")
         self.__url = url
 
+    def scrape_web(self):
+        self._run_scraper()
 
-    @codnity_logger.Logger(logger=logger)
-    def get_data(self):
-        results = requests.get(self.url)
-        return results.text
+    def _run_scraper(self):
+        content = self._get_page_content
+        soup = BeautifulSoup(content.content, 'html.parser')
+        titles = self._get_title(soup)
+
+    def _get_page_content(self):
+        return requests.get(self.url)
+
+    def _get_title(self, soup):
+       #title_head = soup.find_all("span", class_="titleline")
+       #href = title_head[0].find('a')
+       #subline = soup.find_all("span", class_="subline")
+       #title =  subline[0].find('span', class_'age')['title']
+       #points =  subline[0].find('span', class_'score')
+       #points = points.text
+        titles = soup.find_all("span", class_="titleline")
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
