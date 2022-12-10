@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Hacker News Data{%endblock title%}
+
+{% block content %}
+    <div id='hacker_news_index'>
+        <table id='datatable_hacker_news' style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Link</th>
+                    <th>Points</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody> 
+                {%for news in hacker_news%}
+                    <tr>    
+                        <td>{{news.title}}</td>
+                        <td>{{news.link}}</td>
+                        <td>{{news.points}}</td>
+                        <td>{{news.created}}</td>
+                    </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+{%endblock content%}
