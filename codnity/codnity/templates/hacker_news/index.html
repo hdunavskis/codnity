@@ -25,4 +25,16 @@
             </tbody>
         </table>
     </div>
+    {% comment %} <div class="spinner-border text-primary" id="spinner" role="status">
+        <span class="sr-only"></span>
+    </div> {% endcomment %}
+    <button class="btn btn-primary" type="button" id="spinner" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </button>
+    <strong id='message' style='display:none;'>Updating might take some time...</strong>
+    <button class="btn btn-primary" id='submit' onclick="getapi()">Update Results</button>
 {%endblock content%}
+{% block extrajs %} 
+    <script type='text/javascript' src="{% static 'js/spinner.js' %} "></script>
+{% endblock extrajs %}

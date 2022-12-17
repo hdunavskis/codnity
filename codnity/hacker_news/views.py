@@ -1,8 +1,11 @@
 from django.views.generic import ListView
 from typing import List
 from .models import Codnity
-from codnity.utils.scraper import Scraper
-from django.shortcuts import render
+from codnity.utils.scraper_asyncio import Scraper
+# from codnity.utils.scraper_threads import Scraper
+from django.shortcuts import redirect
+from django.urls import reverse
+
 
 class HackerNewsView(ListView):
     model = Codnity
@@ -11,11 +14,6 @@ class HackerNewsView(ListView):
     context_object_name: str = 'hacker_news'
 
 
-# def test(request):
-#     context = {}
-
-#     s = Scraper('https://news.ycombinator.com/news?p=5')
-
-#     context['results'] = s.get_data()
-
-#     return render(request, 'hacker_news/test.html', context)
+def update_results(request):
+    Scraper().run_scraper()
+    return redirect(reverse('hacker:hacker_news'))
