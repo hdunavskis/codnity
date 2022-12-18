@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.TextField(max_length=500)),
-                ('link', models.URLField(max_length=200)),
+                ('link', models.URLField(max_length=500)),
                 ('points', models.CharField(max_length=100)),
                 ('created', models.DateTimeField(max_length=100)),
             ],

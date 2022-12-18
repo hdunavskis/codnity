@@ -1,7 +1,7 @@
-from django.views.generic import ListView
 from typing import List
-from .models import Codnity
+from django.views.generic import ListView
 from codnity.utils.scraper_asyncio import Scraper
+from .models import Codnity
 # from codnity.utils.scraper_threads import Scraper
 from django.shortcuts import redirect
 from django.urls import reverse
