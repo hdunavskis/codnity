@@ -25,7 +25,6 @@ class Scraper:
         'http://208.79.10.113:9080',
         'http://20.239.27.216:3128',
         'http://20.121.184.238:443',
-        'http://135.148.95.28:3128'
     ]
     UA = UserAgent()
     saved_data = []
@@ -45,7 +44,8 @@ class Scraper:
 
 
     def run_scraper(self):
-        with ThreadPoolExecutor(max_workers=3, thread_name_prefix='thread') as executor:
+        with ThreadPoolExecutor(max_workers=4, thread_name_prefix='thread') as executor:
+            executor.submit(Scraper._get_results)
             executor.submit(Scraper._get_results)
             executor.submit(Scraper._get_results)
             executor.submit(Scraper._get_results)
@@ -55,19 +55,14 @@ class Scraper:
     @staticmethod
     def _get_results() -> None:
         final_page = False
-        web_content = None
-        page = set()
         while not final_page:
-            with Scraper._lock:
-                page.add(Scraper.index)
-                try:
-                    page_index = page.pop()
-                    web_content = Scraper._fetch_data(page_index)
+            try:
+                with Scraper._lock:
+                    web_content = Scraper._fetch_data(Scraper.index)
                     Scraper.index += 1
-                except httpx.HTTPError:
-                    page.add(Scraper.index)
-                    web_content = None
-            if web_content:
+            except httpx.HTTPError as err:
+                logging.error(err)
+            else:
                 soup = BeautifulSoup(web_content.text, 'html.parser')
                 title_head = soup.find_all("span", class_="titleline")
                 subtext = soup.find_all("td", class_="subtext")
@@ -75,7 +70,7 @@ class Scraper:
                 Scraper.saved_data.append(parsed_data)
                 more_pages = soup.find('a', class_='morelink')
 
-                if not more_pages and not page:
+                if not more_pages:
                     final_page = True
 
 
@@ -83,7 +78,7 @@ class Scraper:
     def _fetch_data(index):
         proxy = Scraper.PROXY_POOL[random.randint(0, len(Scraper.PROXY_POOL)-1)]
         with httpx.Client(proxies={'https://':proxy},
-                                headers={'User-Agent':Scraper.UA.random}, timeout=1) as client:
+                                headers={'User-Agent':Scraper.UA.random}, timeout=2) as client:
             return client.get(Scraper.URL + str(index))
 
 

@@ -53,7 +53,8 @@ class Scraper:
         while not final_page:
             try:
                 web_content = await Scraper._fetch_data(index)
-            except httpx.HTTPError:
+            except httpx.HTTPError as err:
+                logging.error(err)
                 index -= 1
             else:
                 soup = BeautifulSoup(web_content.text, 'html.parser')
