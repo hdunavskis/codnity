@@ -28,7 +28,6 @@ class Scraper:
     ]
     UA = UserAgent()
     saved_data = []
-    index = 1
 
     def __repr__(self) -> str:
         return f'Scraper(url={self.URL})'
@@ -55,11 +54,12 @@ class Scraper:
     @staticmethod
     def _get_results() -> None:
         final_page = False
+        index = 1
         while not final_page:
             try:
                 with Scraper._lock:
-                    web_content = Scraper._fetch_data(Scraper.index)
-                    Scraper.index += 1
+                    web_content = Scraper._fetch_data(index)
+                    index += 1
             except httpx.HTTPError as err:
                 logging.error(err)
             else:
